@@ -1,5 +1,5 @@
 -- ===================================================
--- online_course - Online Course access for System Schema
+-- online_course - Online Course System Schema
 -- ===================================================
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -82,6 +82,33 @@ CREATE TABLE `lessons` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ===================================================
+-- ตาราง quizzes
+-- ความสัมพันธ์: lessons (1) ── (many) quizzes
+-- ===================================================
+CREATE TABLE `quizzes` (
+  `id`              INT             NOT NULL AUTO_INCREMENT,
+  `lesson_id`       INT             NOT NULL,
+  `question`        text            NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX (`lesson_id`),
+  FOREIGN KEY (`lesson_id`) REFERENCES `lessons`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ===================================================
+-- ตาราง quiz_choices
+-- ความสัมพันธ์: quizzes (1) ── (many) quiz_choices
+-- ===================================================
+CREATE TABLE quiz_choices (
+  `id`              INT             NOT NULL AUTO_INCREMENT,
+  `quiz_id`         INT             NOT NULL,
+  `choice_text`     VARCHAR(255)    NOT NULL,
+  `is_correct`      boolean DEFAULT FALSE,
+  PRIMARY KEY (id),
+  INDEX (quiz_id),
+  FOREIGN KEY (`quiz_id`) REFERENCES quizzes(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ===================================================
 -- ตาราง enrollments
 -- ความสัมพันธ์: users(student) (1) ── (many) enrollments
 --             courses (1) ── (many) enrollments
@@ -115,20 +142,6 @@ CREATE TABLE `progress` (
   INDEX (`student_id`),
   INDEX (`lesson_id`),
   FOREIGN KEY (`student_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`lesson_id`) REFERENCES `lessons`(`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- ===================================================
--- ตาราง quizzes
--- ความสัมพันธ์: lessons (1) ── (many) quizzes
--- ===================================================
-CREATE TABLE `quizzes` (
-  `id`              INT             NOT NULL AUTO_INCREMENT,
-  `lesson_id`       INT             NOT NULL,
-  `question`        text            NOT NULL,
-  `correct_answer`  varchar(255)    NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX (`lesson_id`),
   FOREIGN KEY (`lesson_id`) REFERENCES `lessons`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

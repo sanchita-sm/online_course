@@ -22,9 +22,29 @@ const getStudentAttempts = async (student_id) => {
         ON attempts.question_id = questions.id
         JOIN answers
         ON attempts.answer_id = answers.id
-        WHERE attempts.student_id = ?`,[student_id]
+        WHERE attempts.student_id = ?`, [student_id]
     )
     return rows
 }
 
-module.exports = { submitAnswer, getStudentAttempts }
+const getQuizAttempts = async (quiz_id) => {
+    const conn = await getConnection()
+    const [rows] = await conn.query(
+        `SELECT *
+        FROM quiz_attempts
+        WHERE quiz_id = ?`, [quiz_id]
+    )
+    return rows
+}
+
+const getStudentScore = async (student_id, quiz_id) => {
+    const conn = await getConnection()
+    const [rows] = await conn.query(
+        `SELECT SUM(score) AS total_score
+        FROM quiz_attempts
+        WHERE student_id = ? AND quiz_id = ?`, [student_id, quiz_id]
+    )
+    return rows[0]
+}
+
+module.exports = { submitAnswer, getStudentAttempts, getQuizAttempts, getStudentScore }

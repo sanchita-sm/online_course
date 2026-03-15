@@ -50,7 +50,7 @@ INSERT INTO `quiz_choices` (`quiz_id`, `choice_text`,`is_correct`) VALUES
 (4, '2',1),
 (4, '3',0);
 
-INSERT INTO `enrollments` (`user_id`, `course_id`) VALUES
+INSERT INTO `enrollments` (`student_id`, `course_id`) VALUES
 (3, 1),
 (3, 3);
 

@@ -62,4 +62,22 @@ const getById = async (req, res, next) => {
     }
 }
 
-module.exports = { validateUser, register, login, getAll, getById }
+const update = async (req, res, next) => {
+    try {
+        const result = await UserModel.update(req.params.id, req.body)
+        res.json({ message: 'update success', data: result })
+    } catch (error) {
+        next(error)
+    }
+}
+
+const remove = async (req, res, next) => {
+    try {
+        const result = await UserModel.remove(req.params.id)
+        res.json({ message: 'delete success', data: result })
+    } catch (error) {
+        next(error)
+    }
+}
+
+module.exports = { validateUser, register, login, getAll, getById, update, remove }

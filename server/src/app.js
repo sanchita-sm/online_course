@@ -5,3 +5,21 @@ const path = require('path')
 const errorHandler = require('./middlewares/errorHandler')
 const swaggerSpec = require('./swagger')
 
+const app = express()
+
+app.use(bodyparser.json())
+app.use(cors())
+
+app.use('/users', require('./routes/users'))
+app.use('/courses', require('./routes/courses'))
+app.use('/lessons', require('./routes/lessons'))
+app.use('/quiz', require('./routes/quiz'))
+app.use('/enrollments', require('./routes/enrollments'))
+app.use('/progress', require('./routes/progress'))
+
+app.get('/api-docs/spec', (req, res) => res.json(swaggerSpec))
+app.get('/api-docs', (req, res) => res.sendFile(path.join(__dirname, 'swagger-ui.html')))
+
+app.use(errorHandler)
+
+module.exports = app

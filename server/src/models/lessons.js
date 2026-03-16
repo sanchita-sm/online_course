@@ -1,8 +1,11 @@
 const { getConnection } = require('../config/db')
 
-const findAll = async () => {
+const findByCourseID = async (course_id) => {
   const conn = await getConnection()
-  const [rows] = await conn.query('SELECT * FROM lessons')
+  const [rows] = await conn.query(
+    `SELECT * FROM lessons WHERE course_id = ?
+    ORDER BY position`, [course_id]
+  )
   return rows
 }
 
@@ -24,7 +27,7 @@ const create = async (data) => {
 
 const update = async (id, data) => {
   const conn = await getConnection()
-  const { course_id, title, description, video_url, position, id } = data
+  const { course_id, title, description, video_url, position } = data
   const [result] = await conn.query(
     'UPDATE lessons SET course_id=?, title=?, description=?, video_url=?, position=? WHERE id=?',
     [course_id, title, description, video_url, position, id]
@@ -38,4 +41,4 @@ const remove = async (id) => {
   return result
 }
 
-module.exports = { findAll, findByID, create, update, remove }
+module.exports = { findByCourseID, findByID, create, update, remove }

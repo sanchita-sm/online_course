@@ -2,37 +2,46 @@ const { getConnection } = require('../config/db')
 
 const submitAnswer = async (data) => {
     const conn = await getConnection()
-    const { lesson_id, question } = data
+    const { quiz_id, student_id, selected_choice_id } = data
+
+  // 1. เช็คว่า choice ถูกไหม
+    const [choiceRows] = await conn.query(
+        'SELECT is_correct FROM quiz_choices WHERE id = ? AND quiz_id = ?',
+        [selected_choice_id, quiz_id]
+    )
+    if (choiceRows.length === 0) {
+        throw new Error('Invalid choice for this quiz')
+    }
+
+    const isCorrect = choiceRows[0].is_correct
+    const score = isCorrect ? 1 : 0
+
+  // 2. insert attempt
     const [result] = await conn.query(
-        'INSERT INTO quizzes (quiz_id, student_id, student_answer) VALUES (?, ?, ?)',
-        [quiz_id, student_id, student_answer]
+        `INSERT INTO quiz_attempts 
+        (quiz_id, student_id, selected_choice_id, score) VALUES (?, ?, ?, ?)`,
+        [quiz_id, student_id, selected_choice_id, score]
     )
     return result
-}
-
-const getStudentAttempts = async (student_id) => {
-    const conn = await getConnection()
-    const [rows] = await conn.query(
-        `SELECT attempts.id,
-        questions.question_text,
-        answers.answer_text,
-        attempts.created_at
-        FROM attempts
-        JOIN questions
-        ON attempts.question_id = questions.id
-        JOIN answers
-        ON attempts.answer_id = answers.id
-        WHERE attempts.student_id = ?`, [student_id]
-    )
-    return rows
 }
 
 const getQuizAttempts = async (quiz_id) => {
     const conn = await getConnection()
     const [rows] = await conn.query(
-        `SELECT *
+        `SELECT quiz_attempts.id,
+        quiz_attempts.student_id,
+        users.firstname,
+        users.lastname,
+        quiz_choices.choice_text,
+        quiz_attempts.score,
+        quiz_attempts.submitted_at
         FROM quiz_attempts
-        WHERE quiz_id = ?`, [quiz_id]
+        JOIN users 
+        ON quiz_attempts.student_id = users.id
+        JOIN quiz_choices 
+        ON quiz_attempts.selected_choice_id = quiz_choices.id
+        WHERE quiz_attempts.quiz_id = ?`,
+        [quiz_id]
     )
     return rows
 }
@@ -40,11 +49,12 @@ const getQuizAttempts = async (quiz_id) => {
 const getStudentScore = async (student_id, quiz_id) => {
     const conn = await getConnection()
     const [rows] = await conn.query(
-        `SELECT SUM(score) AS total_score
+        `SELECT COALESCE(SUM(score), 0) AS total_score
         FROM quiz_attempts
-        WHERE student_id = ? AND quiz_id = ?`, [student_id, quiz_id]
+        WHERE student_id = ? AND quiz_id = ?`,
+        [student_id, quiz_id]
     )
     return rows[0]
 }
 
-module.exports = { submitAnswer, getStudentAttempts, getQuizAttempts, getStudentScore }
+module.exports = { submitAnswer, getQuizAttempts, getStudentScore }

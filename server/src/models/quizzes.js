@@ -18,7 +18,7 @@ const create = async (data) => {
 
 const update = async (id, data) => {
   const conn = await getConnection()
-  const { lesson_id, question, id } = data
+  const { lesson_id, question } = data
   const [result] = await conn.query(
     'UPDATE quizzes SET lesson_id=?, question=? WHERE id=?',
     [lesson_id, question, id]

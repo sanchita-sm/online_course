@@ -30,11 +30,13 @@ const create = async (data) => {
 
 const update = async (id, data) => {
   const conn = await getConnection()
-  const { firstname, lastname, email, password, role, id } = data
+  const { firstname, lastname, email, password, role } = data
+
   const [result] = await conn.query(
     'UPDATE users SET firstname=?, lastname=?, email=?, password=?, role=? WHERE id=?',
     [firstname, lastname, email, password, role, id]
   )
+
   return result
 }
 

@@ -8,7 +8,7 @@ INSERT INTO `users` (`firstname`, `lastname`, `email`, `password`, `role`) VALUE
 ('สัญจิตา', 'มองกอล', 'sanchita.m@ku.th', '1234noel', 'นักเรียน/นักศึกษา');
 
 INSERT INTO `categories` (`category`) VALUES
-('Math'), ('Science'), ('Bio'), ('Chem'), ('Physics'), ('History'), ('English'), ('Programming');
+('คณิตศาสตร์'), ('วิทยาศาสตร์'), ('ชีววิทยา'), ('เคมี'), ('ฟิสิกส์'), ('สังคมศึกษา'), ('ภาษาอังกฤษ'), ('โปรแกรมมิ่ง');
 
 INSERT INTO `levels` (`level`) VALUES
 ('มัธยมศึกษาตอนต้น'), ('มัธยมศึกษาตอนปลาย'), ('มหาวิทยาลัย');
@@ -59,5 +59,5 @@ INSERT INTO `progress` (`student_id`, `lesson_id`, `completed`) VALUES
 (3, 2, true),
 (3, 3, false);
 
-INSERT INTO `quiz_attempts` (`quiz_id`, `student_id`, `student_answer`, `score`) VALUES
-(1, 3, '7', 1);
+INSERT INTO `quiz_attempts` (`quiz_id`, `student_id`, `selected_choice_id`, `score`) VALUES
+(1, 3, '5', 0);

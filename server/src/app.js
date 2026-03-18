@@ -16,6 +16,8 @@ app.use('/lessons', require('./routes/lessons'))
 app.use('/quiz', require('./routes/quiz'))
 app.use('/enrollments', require('./routes/enrollments'))
 app.use('/progress', require('./routes/progress'))
+app.use('/categories', require('./routes/categories'))
+app.use('/levels', require('./routes/levels'))
 
 app.get('/api-docs/spec', (req, res) => res.json(swaggerSpec))
 app.get('/api-docs', (req, res) => res.sendFile(path.join(__dirname, 'swagger-ui.html')))

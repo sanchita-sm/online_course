@@ -1,19 +1,17 @@
-const { getConnection } = require('../config/db')
+const { getConnection } = require('../config/db');
 
-const findAll = async () => {
-  const conn = await getConnection()
-  const [rows] = await conn.query('SELECT * FROM levels')
-  return rows
-}
+const LevelModel = {
+  findAll: async () => {
+    const conn = await getConnection();
+    const [rows] = await conn.query('SELECT * FROM levels ORDER BY id ASC');
+    return rows;
+  },
 
-const create = async (data) => {
-  const conn = await getConnection()
-  const { level } = data
-  const [result] = await conn.query(
-    'INSERT INTO levels (level) VALUES (?)',
-    [level]
-  )
-  return result
-}
+  findById: async (id) => {
+    const conn = await getConnection();
+    const [rows] = await conn.query('SELECT * FROM levels WHERE id = ?', [id]);
+    return rows[0];
+  }
+};
 
-module.exports = { findAll, create }
+module.exports = LevelModel;

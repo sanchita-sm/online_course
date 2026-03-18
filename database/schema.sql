@@ -151,15 +151,20 @@ CREATE TABLE `progress` (
 --              users (student) (1) ─── (many) quiz_attempts
 -- ===================================================
 CREATE TABLE quiz_attempts (
-  `id`              INT         NOT NULL AUTO_INCREMENT,
-  `quiz_id`         INT         NOT NULL,
-  `student_id`      INT         NOT NULL,
-  `student_answer`  VARCHAR(255),
-  `score`           INT         NOT NULL,
-  `submitted_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `id`                  INT         NOT NULL AUTO_INCREMENT,
+  `quiz_id`             INT         NOT NULL,
+  `student_id`          INT         NOT NULL,
+  `selected_choice_id`  INT         NOT NULL,
+  `score`               INT         DEFAULT 0,
+  `submitted_at`        timestamp   NULL,
   PRIMARY KEY (`id`),
   INDEX (`quiz_id`),
   INDEX (`student_id`),
-  FOREIGN KEY (`quiz_id`) REFERENCES quizzes(`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`student_id`) REFERENCES users(`id`)
+  INDEX (`quiz_id`, `student_id`),
+  CONSTRAINT fk_quiz FOREIGN KEY (`quiz_id`) REFERENCES quizzes(`id`) ON DELETE CASCADE,
+  CONSTRAINT fk_student FOREIGN KEY (`student_id`) REFERENCES users(`id`),
+  CONSTRAINT fk_selected_choice FOREIGN KEY (`selected_choice_id`) REFERENCES quiz_choices(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO categories (category) VALUES ('คณิตศาสตร์'), ('วิทยาศาสตร์'), ('ชีววิทยา'), ('เคมี'), ('ฟิสิกส์'), ('สังคมศึกษา'), ('ภาษาอังกฤษ'), ('โปรแกรมมิ่ง');
+INSERT INTO levels (level) VALUES ('มัธยมศึกษาตอนต้น'), ('มัธยมศึกษาตอนปลาย'), ('มหาวิทยาลัย');

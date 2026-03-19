@@ -2,13 +2,28 @@ const express = require('express')
 const bodyparser = require('body-parser')
 const cors = require('cors')
 const path = require('path')
+const session = require('express-session')
 const errorHandler = require('./middlewares/errorHandler')
 const swaggerSpec = require('./swagger')
 
 const app = express()
 
 app.use(bodyparser.json())
-app.use(cors())
+app.use(cors({
+  origin: true,
+  credentials: true  // จำเป็นเพื่อให้ session cookie ส่งข้ามได้
+}))
+
+// session setup
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    maxAge: 7 * 24 * 60 * 60 * 1000  // มีอายุ 7 วัน
+  }
+}))
 
 app.use('/users', require('./routes/users'))
 app.use('/courses', require('./routes/courses'))

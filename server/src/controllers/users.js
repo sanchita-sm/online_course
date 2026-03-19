@@ -1,20 +1,18 @@
 const UserModel = require('../models/users')
+const bcrypt = require('bcrypt')
 
 const validateUser = (req, res, next) => {
   const { firstname, lastname, email, password, role } = req.body
   const errors = []
-
   if (!firstname) errors.push('กรุณากรอกชื่อ')
   if (!lastname) errors.push('กรุณากรอกนามสกุล')
   if (!email) errors.push('กรุณากรอกอีเมล')
   if (!password) errors.push('กรุณากรอกรหัสผ่าน')
   if (!role) errors.push('กรุณากรอกสถานะ')
-  if (role && !['ครู/อาจารย์','นักเรียน/นักศึกษา'].includes(role)) {
-    errors.push('role ต้องเป็น ครู/อาจารย์ หรือ นักเรียน/นักศึกษา')
+  if (role && !['teacher', 'student'].includes(role)) {
+    errors.push('role ต้องเป็น teacher หรือ student')
   }
-
   if (errors.length > 0) return res.status(400).json({ message: 'กรอกข้อมูลไม่ครบหรือไม่ถูกต้อง', errors })
-
   next()
 }
 
@@ -22,8 +20,8 @@ const register = async (req, res, next) => {
   try {
     const existing = await UserModel.findByEmail(req.body.email)
     if (existing) return res.status(400).json({ message: 'Email ซ้ำ', errors: ['Email นี้มีคนใช้งานแล้ว'] })
-
-    const result = await UserModel.create(req.body)
+    const hashed = await bcrypt.hash(req.body.password, 10)
+    const result = await UserModel.create({ ...req.body, password: hashed })
     res.status(201).json({ message: 'Register success', data: result })
   } catch (error) {
     next(error)
@@ -34,10 +32,23 @@ const login = async (req, res, next) => {
   try {
     const { email, password } = req.body
     const user = await UserModel.findByEmail(email)
-    if (!user || user.password !== password) {
+    const match = user && await bcrypt.compare(password, user.password)
+    if (!match) {
       return res.status(401).json({ message: 'Email หรือ password ไม่ถูกต้อง' })
     }
-    res.json({ message: 'Login success', data: user })
+    // เก็บ user ไว้ใน session
+    req.session.user = { id: user.id, role: user.role }
+    const { password: _, ...safeUser } = user
+    res.json({ message: 'Login success', data: safeUser })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const logout = async (req, res, next) => {
+  try {
+    req.session.destroy()
+    res.json({ message: 'Logout success' })
   } catch (error) {
     next(error)
   }
@@ -80,4 +91,4 @@ const remove = async (req, res, next) => {
   }
 }
 
-module.exports = { validateUser, register, login, getAll, getById, update, remove }
+module.exports = { validateUser, register, login, logout, getAll, getById, update, remove }

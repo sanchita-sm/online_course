@@ -1,23 +1,255 @@
-/* Reset & Base */
+@font-face {
+  font-family: "kanit";
+  src: url("../fonts/Kanit/Kanit-Light.ttf") format("truetype");
+  font-weight: 300;
+}
+@font-face {
+  font-family: "kanit";
+  src: url("../fonts/Kanit/Kanit-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "kanit";
+  src: url("../fonts/Kanit/Kanit-Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "kanit";
+  src: url("../fonts/Kanit/Kanit-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+}
+
+
+/* ตั้งค่าพื้นฐาน */
 * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
+    font-family: 'kanit', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-    font-family: 'Arial', sans-serif;
-    font-size: 16px;
-    line-height: 1.6;
-    background-color: #f8f9fa; /* สีพื้นหลังอ่อน */
+    background-color: #f4f7f6;
+    margin: 0;
+    font-family: 'kanit', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* กล่องคอนเทนเนอร์หลัก */
+.container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+}
+
+/* หัวข้อ Register Form */
+.header {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 25px;
     color: #333;
+    padding-bottom: 10px;
 }
 
-a {
+/* การจัดวางแบบ Flex (ใช้สำหรับแถว input) */
+.flex {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.form-input {
+    margin-bottom: 15px;
+}
+
+/* หัวข้อของแต่ละช่องกรอก */
+.header-form {
+    min-width: 80px;
+    font-weight: 600;
+    color: #555;
+}
+
+/* ปรับแต่ง Input และ Textarea */
+.form, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.form:focus, textarea:focus {
+    border-color: #4CAF50;
+}
+
+textarea {
+    height: 80px;
+    resize: vertical;
+    margin-top: 5px;
+}
+
+/* ปรับแต่งส่วนเลือกเพศและงานอดิเรก */
+.gender .flex {
+    gap: 20px;
+}
+
+.form-input > div {
+    margin-top: 5px;
+}
+
+/* ปุ่มกด */
+.center {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    width: 100%;
+}
+
+.button:hover {
+    background-color: #45a049;
+}
+
+.button:active {
+    transform: scale(0.98);
+}
+
+.message {
+    background-color: lightgray;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    display: none;
+}
+
+.message.success {
+    background-color: #d4edda;
+    display: block;
+}
+
+.message.danger {
+    background-color: #f8d7da;
+    display: block;
+}
+
+/* Header */
+.site-header {
+    width: 100%;
+    background-color: #4f46e5;
+    color: #fff;
+    padding: 15px 20px;
+}
+
+.container-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+/* Logo */
+.logo a {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
     text-decoration: none;
-    color: inherit;
 }
 
-ul {
-    list-style: none;
+/* Navbar */
+.navbar {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 15px;
+}
+
+.nav-links li {
+    position: relative;
+}
+
+.nav-links a {
+    color: #fff;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.nav-links a:hover {
+    background-color: rgba(255,255,255,0.2);
+}
+
+/* เริ่มซ่อน dropdown */
+.dropdown-menu {
+    display: none;       /* ซ่อนตอนเริ่ม */
+    position: absolute;
+    top: 100%;           /* อยู่ใต้ parent */
+    left: 0;
+    background-color: #4f46e5;
+    border-radius: 5px;
+    padding: 10px 0;
+    min-width: 180px;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+/* แสดง dropdown เมื่อ hover ที่ parent */
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+/* รูปแบบแต่ละลิงก์ใน dropdown */
+.dropdown-menu li a {
+    display: block;
+    padding: 8px 15px;
+    color: #fff;
+    transition: background 0.3s;
+}
+
+.dropdown-menu li a:hover {
+    background-color: rgba(255,255,255,0.2);
+}
+
+/* Main content */
+.main-content {
+    margin-top: 80px; /* เว้น header */
+    display: flex;
+    justify-content: center; /* จัด horizontal center */
+    align-items: center;     /* จัด vertical center ถ้าต้องการ */
+    flex-direction: column;  /* จัด hero เป็น column */
+    text-align: center;      /* จัด text ตรงกลาง */
+    min-height: calc(100vh - 80px); /* ความสูงเต็มจอ ลบ header */
+    padding: 20px;
+}
+
+/* Hero */
+.hero h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+.hero .button {
+    padding: 12px 25px;
+    font-size: 18px;
 }

@@ -15,11 +15,11 @@ const spec = {
     ],
     components: {
         securitySchemes: {
-            bearerAuth: {
-                type: 'http',
-                scheme: 'bearer',
-                bearerFormat: 'JWT',
-            },
+            cookieAuth: {
+                type: 'apiKey',
+                in: 'cookie',
+                name: 'connect.sid'
+            }
         },
         schemas: {
             User: {
@@ -29,7 +29,7 @@ const spec = {
                     firstname: { type: 'string', example: 'สมพร' },
                     lastname: { type: 'string', example: 'ดีใจ' },
                     email: { type: 'string', format: 'email', example: 'sompdjai@gmail.com' },
-                    role: { type: 'string', enum: ['ครู/อาจารย์', 'นักเรียน/นักศึกษา'], example: 'ครู/อาจารย์' },
+                    role: { type: 'string', enum: ['teacher', 'student'], example: 'teacher' },
                     created_at: { type: 'string', format: 'date-time' }
                 }
             },
@@ -40,8 +40,8 @@ const spec = {
                     firstname: { type: 'string', example: 'สมพร' },
                     lastname: { type: 'string', example: 'ดีใจ' },
                     email: { type: 'string', format: 'email', example: 'sompdjai@gmail.com' },
-                    password: {type: 'string', example: '1234567'},
-                    role: { type: 'string', enum: ['ครู/อาจารย์', 'นักเรียน/นักศึกษา'], example: 'ครู/อาจารย์' }
+                    password: { type: 'string', example: '1234567' },
+                    role: { type: 'string', enum: ['teacher', 'student'], example: 'teacher' }
                 }
             },
             Login: {
@@ -53,17 +53,16 @@ const spec = {
             },
             LoginInput: {
                 type: 'object',
-                required: ['email','password'],
+                required: ['email', 'password'],
                 properties: {
                     email: { type: 'string', format: 'email', example: 'sompdjai@gmail.com' },
                     password: { type: 'string', example: '1234567' }
                 }
             },
-            
             Category: {
                 type: 'object',
                 properties: {
-                    id: { type: 'integer', example: 1},
+                    id: { type: 'integer', example: 1 },
                     category: { type: 'string', example: 'คณิตศาสตร์' }
                 }
             },
@@ -77,7 +76,7 @@ const spec = {
             Level: {
                 type: 'object',
                 properties: {
-                    id: { type: 'integer', example: 1},
+                    id: { type: 'integer', example: 1 },
                     level: { type: 'string', example: 'มัธยมศึกษาตอนต้น' }
                 }
             },
@@ -116,7 +115,7 @@ const spec = {
             },
             CourseInput: {
                 type: 'object',
-                required: ['title', 'description', 'category_id', 'level_id', 'teacher_id' ],
+                required: ['title', 'description', 'category_id', 'level_id', 'teacher_id'],
                 properties: {
                     title: { type: 'string', example: 'แคลคูลัสเบื้องต้น (Calculus 1)' },
                     description: { type: 'string', example: 'พื้นฐานลิมิต อนุพันธ์ และอินทิกรัล' },
@@ -243,7 +242,7 @@ const spec = {
                     quiz_id: { type: 'integer', example: 1 },
                     student_id: { type: 'integer', example: 2 },
                     selected_choice_id: { type: 'integer', example: 5 },
-                    score: { type: 'integer', example: 1 },
+                    is_correct: { type: 'boolean', example: true },
                     submitted_at: { type: 'string', format: 'date-time' }
                 }
             },
@@ -253,9 +252,9 @@ const spec = {
                     {
                         type: 'object',
                         properties: {
-                        student: { $ref: '#/components/schemas/User' },
-                        quiz: { $ref: '#/components/schemas/Quiz' },
-                        choice: { $ref: '#/components/schemas/QuizChoice' }
+                            student: { $ref: '#/components/schemas/User' },
+                            quiz: { $ref: '#/components/schemas/Quiz' },
+                            choice: { $ref: '#/components/schemas/QuizChoice' }
                         }
                     }
                 ]
@@ -305,9 +304,7 @@ const spec = {
             }
         }
     },
-    security: [{
-        bearerAuth: []
-    }],
+    security: [{ cookieAuth: [] }],
     paths: {
         // ─── Users ─────────────────────────────────────────────────────────────────
         '/users/register': {
@@ -338,10 +335,20 @@ const spec = {
                 }
             }
         },
+        '/users/logout': {
+            post: {
+                tags: ['Users'],
+                summary: 'ออกจากระบบ',
+                responses: {
+                    200: { description: 'Logout success', content: { 'application/json': { schema: { $ref: '#/components/schemas/SuccessMessage' } } } }
+                }
+            }
+        },
         '/users': {
             get: {
                 tags: ['Users'],
                 summary: 'ดึงรายชื่อผู้ใช้ทั้งหมด',
+                security: [{ cookieAuth: [] }],
                 responses: {
                     200: { description: 'รายชื่อผู้ใช้', content: { 'application/json': { schema: { type: 'array', items: { $ref: '#/components/schemas/User' } } } } }
                 }
@@ -351,6 +358,7 @@ const spec = {
             get: {
                 tags: ['Users'],
                 summary: 'ดึงข้อมูลผู้ใช้ตาม ID',
+                security: [{ cookieAuth: [] }],
                 parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
                 responses: {
                     200: { description: 'ข้อมูลผู้ใช้', content: { 'application/json': { schema: { $ref: '#/components/schemas/User' } } } },
@@ -360,6 +368,7 @@ const spec = {
             put: {
                 tags: ['Users'],
                 summary: 'แก้ไขข้อมูลผู้ใช้',
+                security: [{ cookieAuth: [] }],
                 parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
                 requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/UserInput' } } } },
                 responses: { 200: { description: 'แก้ไขสำเร็จ', content: { 'application/json': { schema: { $ref: '#/components/schemas/SuccessMessage' } } } } }
@@ -367,6 +376,7 @@ const spec = {
             delete: {
                 tags: ['Users'],
                 summary: 'ลบผู้ใช้',
+                security: [{ cookieAuth: [] }],
                 parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
                 responses: { 200: { description: 'ลบสำเร็จ', content: { 'application/json': { schema: { $ref: '#/components/schemas/SuccessMessage' } } } } }
             }
@@ -376,38 +386,32 @@ const spec = {
             get: {
                 tags: ['Categories'],
                 summary: 'ดึงข้อมูลหมวดหมู่ทั้งหมด (read-only)',
-                responses: {
-                    '200': { description: 'OK' },
-                },
-            },
+                responses: { '200': { description: 'OK' } }
+            }
         },
         '/categories/{id}': {
             get: {
                 tags: ['Categories'],
                 summary: 'ดึงหมวดหมู่ตาม ID (read-only)',
-                parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } },
-                ],
-                responses: { '200': { description: 'OK' }, '404': { description: 'Not Found' } },
-            },
+                parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
+                responses: { '200': { description: 'OK' }, '404': { description: 'Not Found' } }
+            }
         },
         // ─── Levels ─────────────────────────────────────────────────────────────────
         '/levels': {
             get: {
                 tags: ['Levels'],
                 summary: 'ดึงข้อมูลระดับทั้งหมด (read-only)',
-                responses: {
-                    '200': { description: 'OK' },
-                },
-            },
+                responses: { '200': { description: 'OK' } }
+            }
         },
         '/levels/{id}': {
             get: {
                 tags: ['Levels'],
                 summary: 'ดึงระดับตาม ID (read-only)',
-                parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } },
-                ],
-                responses: { '200': { description: 'OK' }, '404': { description: 'Not Found' } },
-            },
+                parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
+                responses: { '200': { description: 'OK' }, '404': { description: 'Not Found' } }
+            }
         },
         // ─── Courses ──────────────────────────────────────────────────────────────
         '/courses': {
@@ -415,23 +419,21 @@ const spec = {
                 tags: ['Courses'],
                 summary: 'ดึงรายชื่อคอร์สทั้งหมด',
                 responses: {
-                    200: { description: 'รายชื่อคอร์ส',
-                        content: { 'application/json': { schema: { type: 'array', items: { $ref: '#/components/schemas/Course' } } } }
-                    }
+                    200: { description: 'รายชื่อคอร์ส', content: { 'application/json': { schema: { type: 'array', items: { $ref: '#/components/schemas/Course' } } } } }
                 }
             },
             post: {
                 tags: ['Courses'],
-                summary: 'สร้างคอร์สใหม่ (เฉพาะครู/อาจารย์)',
-                security: [{ bearerAuth: [] }],
+                summary: 'สร้างคอร์สใหม่ (เฉพาะครู)',
+                security: [{ cookieAuth: [] }],
                 requestBody: {
                     required: true,
                     content: { 'application/json': { schema: { $ref: '#/components/schemas/CourseInput' } } }
                 },
                 responses: {
-                200: { description: 'สร้างสำเร็จ', content: { 'application/json': { schema: { $ref: '#/components/schemas/SuccessMessage' } } } },
-                400: { description: 'ข้อมูลไม่ครบ', content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } } },
-                401: { description: 'Unauthorized' },
+                    200: { description: 'สร้างสำเร็จ', content: { 'application/json': { schema: { $ref: '#/components/schemas/SuccessMessage' } } } },
+                    400: { description: 'ข้อมูลไม่ครบ', content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } } },
+                    401: { description: 'Unauthorized' }
                 }
             }
         },
@@ -454,18 +456,15 @@ const spec = {
                             }
                         }
                     },
-                    404: { description: 'ไม่พบคอร์ส', content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } } } 
+                    404: { description: 'ไม่พบคอร์ส', content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } } }
                 }
             },
             put: {
                 tags: ['Courses'],
-                summary: 'แก้ไขคอร์ส (เฉพาะครู/อาจารย์)',
-                security: [{ bearerAuth: [] }],
+                summary: 'แก้ไขคอร์ส (เฉพาะครู)',
+                security: [{ cookieAuth: [] }],
                 parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
-                requestBody: {
-                    required: true,
-                    content: { 'application/json': { schema: { $ref: '#/components/schemas/CourseInput' } } }
-                },
+                requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/CourseInput' } } } },
                 responses: {
                     200: { description: 'แก้ไขสำเร็จ', content: { 'application/json': { schema: { $ref: '#/components/schemas/SuccessMessage' } } } },
                     401: { description: 'Unauthorized' }
@@ -474,7 +473,7 @@ const spec = {
             delete: {
                 tags: ['Courses'],
                 summary: 'ลบคอร์ส (cascade ลบ lessons ด้วย)',
-                security: [{ bearerAuth: [] }],
+                security: [{ cookieAuth: [] }],
                 parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
                 responses: {
                     200: { description: 'ลบสำเร็จ', content: { 'application/json': { schema: { $ref: '#/components/schemas/SuccessMessage' } } } },
@@ -484,73 +483,44 @@ const spec = {
         },
         // ─── Lessons ─────────────────────────────────────────────────────────────────
         '/lessons': {
-            get: {
-                tags: ['Lessons'],
-                summary: 'ดึงรายการบทเรียนทั้งหมด',
-                responses: {
-                    200: {
-                    description: 'รายการบทเรียน',
-                    content: { 'application/json': { schema: { type: 'array', items: { $ref: '#/components/schemas/Lesson' } } } } }
-                }
-            },
             post: {
                 tags: ['Lessons'],
-                summary: 'สร้างบทเรียนใหม่ ',
-                security: [{ bearerAuth: [] }],
-                requestBody: {
-                    required: true,
-                    content: { 'application/json': { schema: { $ref: '#/components/schemas/LessonInput' } } }
-                },
+                summary: 'สร้างบทเรียนใหม่',
+                security: [{ cookieAuth: [] }],
+                requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/LessonInput' } } } },
                 responses: {
-                    200: {
-                        description: 'สร้างสำเร็จ', content: { 'application/json': { schema: { $ref: '#/components/schemas/SuccessMessage' } } }
-                    },
-                    400: {
-                        description: 'ข้อมูลไม่ครบ',
-                        content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } }
-                    },
+                    200: { description: 'สร้างสำเร็จ', content: { 'application/json': { schema: { $ref: '#/components/schemas/SuccessMessage' } } } },
+                    400: { description: 'ข้อมูลไม่ครบ', content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } } },
                     401: { description: 'Unauthorized' }
+                }
+            }
+        },
+        '/lessons/course/{id}': {
+            get: {
+                tags: ['Lessons'],
+                summary: 'ดึงบทเรียนทั้งหมดของ course',
+                parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
+                responses: {
+                    200: { description: 'รายการบทเรียนของ course', content: { 'application/json': { schema: { type: 'array', items: { $ref: '#/components/schemas/Lesson' } } } } }
                 }
             }
         },
         '/lessons/{id}': {
             get: {
                 tags: ['Lessons'],
-                summary: 'ดึงข้อมูลบทเรียนตาม id (พร้อม quiz)',
+                summary: 'ดึงข้อมูลบทเรียนตาม id',
                 parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
                 responses: {
-                    200: {
-                        description: 'ข้อมูลบทเรียน',
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    allOf: [
-                                        { $ref: '#/components/schemas/Lesson' },
-                                        { type: 'object', properties: { quizzes: { type: 'array', items: { $ref: '#/components/schemas/Quiz' } } } }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    404: {
-                        description: 'ไม่พบบทเรียน',
-                        content: {
-                            'application/json': {
-                                schema: { $ref: '#/components/schemas/ErrorResponse' }
-                            }
-                        }
-                    }
+                    200: { description: 'ข้อมูลบทเรียน', content: { 'application/json': { schema: { $ref: '#/components/schemas/Lesson' } } } },
+                    404: { description: 'ไม่พบบทเรียน', content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } } }
                 }
             },
             put: {
                 tags: ['Lessons'],
-                summary: 'แก้ไขบทเรียน (เฉพาะครู/อาจารย์)',
-                security: [{ bearerAuth: [] }],
+                summary: 'แก้ไขบทเรียน (เฉพาะครู)',
+                security: [{ cookieAuth: [] }],
                 parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
-                requestBody: {
-                    required: true,
-                    content: { 'application/json': { schema: { $ref: '#/components/schemas/LessonInput' } } }
-                },
+                requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/LessonInput' } } } },
                 responses: {
                     200: { description: 'แก้ไขสำเร็จ', content: { 'application/json': { schema: { $ref: '#/components/schemas/SuccessMessage' } } } },
                     401: { description: 'Unauthorized' }
@@ -559,7 +529,7 @@ const spec = {
             delete: {
                 tags: ['Lessons'],
                 summary: 'ลบบทเรียน (cascade ลบ quiz ด้วย)',
-                security: [{ bearerAuth: [] }],
+                security: [{ cookieAuth: [] }],
                 parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
                 responses: {
                     200: { description: 'ลบสำเร็จ', content: { 'application/json': { schema: { $ref: '#/components/schemas/SuccessMessage' } } } },
@@ -567,223 +537,93 @@ const spec = {
                 }
             }
         },
-        '/courses/{courseId}/lessons': {
-            get: {
-                tags: ['Lessons'],
-                summary: 'ดึงบทเรียนทั้งหมดของ course',
-                parameters: [{ name: 'courseId', in: 'path', required: true, schema: { type: 'integer' } }],
-                responses: {
-                    200: {
-                        description: 'รายการบทเรียนของ course',
-                        content: { 'application/json': { schema: { type: 'array', items: { $ref: '#/components/schemas/Lesson' } } } }
-                    }
-                }
-            }
-        },
         // ─── Enrollments ──────────────────────────────────────────────────────────────
         '/enrollments': {
-            get: {
-                tags: ['Enrollments'],
-                summary: 'ดึงรายการการลงทะเบียนทั้งหมด',
-                responses: {
-                    200: {
-                        description: 'รายการ enrollments',
-                        content: { 'application/json': { schema: { type: 'array', items: { $ref: '#/components/schemas/Enrollment' } } } }
-                    }
-                }
-            },
             post: {
                 tags: ['Enrollments'],
-                summary: 'ลงทะเบียนเรียน (enroll course)',
-                requestBody: {
-                    required: true,
-                    content: { 'application/json': { schema: { $ref: '#/components/schemas/EnrollmentInput' } } }
-                },
+                summary: 'ลงทะเบียนเรียน (เฉพาะนักเรียน)',
+                security: [{ cookieAuth: [] }],
+                requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/EnrollmentInput' } } } },
                 responses: {
-                    200: {
-                        description: 'ลงทะเบียนสำเร็จ',
-                        content: { 'application/json': { schema: { $ref: '#/components/schemas/SuccessMessage' } } }
-                    },
-                    400: {
-                        description: 'ข้อมูลไม่ครบ หรือซ้ำ',
-                        content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } }
-                    }
+                    200: { description: 'ลงทะเบียนสำเร็จ', content: { 'application/json': { schema: { $ref: '#/components/schemas/SuccessMessage' } } } },
+                    400: { description: 'ข้อมูลไม่ครบ หรือซ้ำ', content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } } }
                 }
             }
         },
-        '/enrollments/{id}': {
+        '/enrollments/course/{course_id}/students': {
             get: {
                 tags: ['Enrollments'],
-                summary: 'ดึงข้อมูล enrollment ตาม id',
-                parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
+                summary: 'ดึงรายชื่อนักเรียนในคอร์ส (เฉพาะครู)',
+                security: [{ cookieAuth: [] }],
+                parameters: [{ name: 'course_id', in: 'path', required: true, schema: { type: 'integer' } }],
                 responses: {
-                    200: {
-                        description: 'ข้อมูล enrollment',
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    allOf: [
-                                        { $ref: '#/components/schemas/Enrollment' },
-                                        { type: 'object', properties: { student: { $ref: '#/components/schemas/User' }, course: { $ref: '#/components/schemas/Course' } } }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    404: { description: 'ไม่พบข้อมูล', content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } } }
-                }
-            },
-            delete: {
-                tags: ['Enrollments'],
-                summary: 'ยกเลิกการลงทะเบียน',
-                parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
-                responses: {
-                    200: {
-                        description: 'ยกเลิกสำเร็จ',
-                        content: {'application/json': { schema: { $ref: '#/components/schemas/SuccessMessage' } } }
-                    }
+                    200: { description: 'รายชื่อนักเรียน', content: { 'application/json': { schema: { type: 'array', items: { $ref: '#/components/schemas/User' } } } } }
                 }
             }
         },
-        '/students/{studentId}/enrollments': {
+        '/enrollments/student/{student_id}/courses': {
             get: {
                 tags: ['Enrollments'],
                 summary: 'ดึงคอร์สที่นักเรียนลงทะเบียน',
-                parameters: [{ name: 'studentId', in: 'path', required: true, schema: { type: 'integer' } }],
+                security: [{ cookieAuth: [] }],
+                parameters: [{ name: 'student_id', in: 'path', required: true, schema: { type: 'integer' } }],
                 responses: {
-                    200: {
-                        description: 'รายการคอร์สของนักเรียน',
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    type: 'array', items: {
-                                        allOf: [
-                                            { $ref: '#/components/schemas/Enrollment' },
-                                            { type: 'object', properties: { course: { $ref: '#/components/schemas/Course' } } }
-                                        ]
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        '/courses/{courseId}/enrollments': {
-            get: {
-                tags: ['Enrollments'],
-                summary: 'ดึงรายชื่อนักเรียนในคอร์ส',
-                parameters: [{ name: 'courseId', in: 'path', required: true, schema: { type: 'integer' } }],
-                responses: {
-                    200: {
-                        description: 'รายชื่อนักเรียน',
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    type: 'array',
-                                    items: {
-                                        allOf: [
-                                            { $ref: '#/components/schemas/Enrollment' },
-                                            { type: 'object', properties: { student: { $ref: '#/components/schemas/User' } } }
-                                        ]
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    200: { description: 'รายการคอร์สของนักเรียน', content: { 'application/json': { schema: { type: 'array', items: { $ref: '#/components/schemas/Course' } } } } }
                 }
             }
         },
         // ─── Quiz ──────────────────────────────────────────────────────────────
-        '/quizzes': {
-            get: {
-                tags: ['Quiz'],
-                summary: 'ดึงรายการคำถามทั้งหมด',
-                responses: {
-                    200: {
-                        description: 'รายการ quiz',
-                        content: { 'application/json': { schema: { type: 'array', items: { $ref: '#/components/schemas/Quiz' } } } }
-                    }
-                }
-            },
+        '/quiz': {
             post: {
                 tags: ['Quiz'],
                 summary: 'สร้างคำถามพร้อมตัวเลือก',
-                requestBody: {
-                    required: true,
-                    content: { 'application/json': { schema: { $ref: '#/components/schemas/QuizInput' } } }
-                },
+                requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/QuizInput' } } } },
                 responses: {
-                    201: {
-                        description: 'สร้างสำเร็จ',
-                        content: { 'application/json': { schema: { $ref: '#/components/schemas/SuccessMessage' } } }
-                    },
-                    400: {
-                            description: 'ข้อมูลไม่ครบ',
-                            content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } }
-                    }
-                    
-                }   
+                    200: { description: 'สร้างสำเร็จ', content: { 'application/json': { schema: { $ref: '#/components/schemas/SuccessMessage' } } } },
+                    400: { description: 'ข้อมูลไม่ครบ', content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } } }
+                }
             }
         },
-        '/quizzes/{id}': {
+        '/quiz/lesson/{lesson_id}': {
             get: {
                 tags: ['Quiz'],
-                summary: 'ดึงคำถามพร้อมตัวเลือก',
-                parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
+                summary: 'ดึงคำถามทั้งหมดของบทเรียน (พร้อม choices)',
+                parameters: [{ name: 'lesson_id', in: 'path', required: true, schema: { type: 'integer' } }],
                 responses: {
-                    200: {
-                        description: 'รายละเอียด quiz',
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    allOf: [
-                                        { $ref: '#/components/schemas/Quiz' },
-                                        {
-                                            type: 'object',
-                                            properties: {
-                                                choices: {
-                                                    type: 'array',
-                                                    items: { $ref: '#/components/schemas/QuizChoice' }
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    404: {
-                        description: 'ไม่พบคำถาม',
-                        content: {
-                            'application/json': {
-                                schema: { $ref: '#/components/schemas/ErrorResponse' }
-                            }
-                        }
-                    }
+                    200: { description: 'รายการ quiz ของ lesson', content: { 'application/json': { schema: { type: 'array', items: { $ref: '#/components/schemas/Quiz' } } } } },
+                    404: { description: 'ไม่พบ quiz', content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } } }
                 }
-            },
+            }
+        },
+        '/quiz/submit': {
+            post: {
+                tags: ['Quiz'],
+                summary: 'ส่งคำตอบ quiz',
+                requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/QuizSubmitInput' } } } },
+                responses: {
+                    200: { description: 'ส่งคำตอบสำเร็จ', content: { 'application/json': { schema: { $ref: '#/components/schemas/SuccessMessage' } } } },
+                    400: { description: 'ข้อมูลไม่ถูกต้อง', content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } } }
+                }
+            }
+        },
+        '/quiz/attempts/{quiz_id}': {
+            get: {
+                tags: ['Quiz'],
+                summary: 'ดูผลการทำ quiz ทั้งหมด',
+                parameters: [{ name: 'quiz_id', in: 'path', required: true, schema: { type: 'integer' } }],
+                responses: {
+                    200: { description: 'รายละเอียดการทำ quiz', content: { 'application/json': { schema: { type: 'array', items: { $ref: '#/components/schemas/QuizAttemptWithDetail' } } } } }
+                }
+            }
+        },
+        '/quiz/{id}': {
             put: {
                 tags: ['Quiz'],
                 summary: 'แก้ไขคำถาม',
                 parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
-                requestBody: {
-                    required: true,
-                    content: {
-                        'application/json': {
-                            schema: { $ref: '#/components/schemas/QuizInput' }
-                        }
-                    }
-                },
+                requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/QuizInput' } } } },
                 responses: {
-                    200: {
-                        description: 'แก้ไขสำเร็จ',
-                        content: {
-                            'application/json': {
-                                schema: { $ref: '#/components/schemas/SuccessMessage' }
-                            }
-                        }
-                    }
+                    200: { description: 'แก้ไขสำเร็จ', content: { 'application/json': { schema: { $ref: '#/components/schemas/SuccessMessage' } } } }
                 }
             },
             delete: {
@@ -791,109 +631,67 @@ const spec = {
                 summary: 'ลบคำถาม (cascade ลบ choices)',
                 parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
                 responses: {
-                    200: {
-                        description: 'ลบสำเร็จ',
-                        content: {
-                            'application/json': {
-                                schema: { $ref: '#/components/schemas/SuccessMessage' }
-                            }
-                        }
-                    }
+                    200: { description: 'ลบสำเร็จ', content: { 'application/json': { schema: { $ref: '#/components/schemas/SuccessMessage' } } } }
                 }
             }
         },
-        // ─── Quiz by Lesson ─────────────────────────────────────────────────────
-        '/lessons/{lessonId}/quizzes': {
-            get: {
-                tags: ['Quiz'],
-                summary: 'ดึงคำถามของบทเรียน',
-                parameters: [{ name: 'lessonId', in: 'path', required: true, schema: { type: 'integer' } }],
-                responses: {
-                    200: {
-                        description: 'รายการ quiz ของ lesson',
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    type: 'array',
-                                    items: { $ref: '#/components/schemas/Quiz' }
-                                }
-                            }
-                        }
-                    }
-                }
-             }
-        },
-        // ─── Quiz Attempts ──────────────────────────────────────────────────────
-        '/quiz-attempts': {
+        // ─── Progress ──────────────────────────────────────────────────────────────
+        '/progress/complete': {
             post: {
-                tags: ['Quiz'],
-                summary: 'ส่งคำตอบ quiz',
+                tags: ['Progress'],
+                summary: 'บันทึกความคืบหน้าบทเรียน',
                 requestBody: {
                     required: true,
                     content: {
                         'application/json': {
-                            schema: { $ref: '#/components/schemas/QuizSubmitInput' }
+                            schema: {
+                                type: 'object',
+                                required: ['student_id', 'lesson_id'],
+                                properties: {
+                                    student_id: { type: 'integer', example: 2 },
+                                    lesson_id: { type: 'integer', example: 1 }
+                                }
+                            }
                         }
                     }
                 },
                 responses: {
-                    201: {
-                        description: 'ส่งคำตอบสำเร็จ',
-                        content: {
-                            'application/json': {
-                                schema: { $ref: '#/components/schemas/SuccessMessage' }
-                            }
-                        }
-                    },
-                    400: {
-                        description: 'ข้อมูลไม่ถูกต้อง',
-                        content: {
-                            'application/json': {
-                                schema: { $ref: '#/components/schemas/ErrorResponse' }
-                            }
-                        }
-                    }
+                    200: { description: 'บันทึกสำเร็จ', content: { 'application/json': { schema: { $ref: '#/components/schemas/SuccessMessage' } } } }
                 }
             }
         },
-        '/quiz-attempts/{id}': {
+        '/progress/student/{student_id}/course/{course_id}/lessons': {
             get: {
-                tags: ['Quiz'],
-                summary: 'ดูผลการทำ quiz',
-                parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
+                tags: ['Progress'],
+                summary: 'ดูความคืบหน้าแต่ละบทเรียนของนักเรียน',
+                parameters: [
+                    { name: 'student_id', in: 'path', required: true, schema: { type: 'integer' } },
+                    { name: 'course_id', in: 'path', required: true, schema: { type: 'integer' } }
+                ],
                 responses: {
-                    200: {
-                        description: 'รายละเอียดการทำ quiz',
-                        content: {
-                            'application/json': {
-                                schema: { $ref: '#/components/schemas/QuizAttemptWithDetail' }
-                            }
-                        }
-                    },
-                    404: {
-                        description: 'ไม่พบข้อมูล',
-                        content: {
-                            'application/json': {
-                                schema: { $ref: '#/components/schemas/ErrorResponse' }
-                            }
-                        }
-                    }
+                    200: { description: 'รายการความคืบหน้า', content: { 'application/json': { schema: { type: 'array', items: { type: 'object' } } } } }
                 }
             }
         },
-        '/students/{studentId}/quiz-attempts': {
+        '/progress/student/{student_id}/course/{course_id}': {
             get: {
-                tags: ['Quiz'],
-                summary: 'ดูประวัติการทำ quiz ของนักเรียน',
-                parameters: [{ name: 'studentId', in: 'path', required: true, schema: { type: 'integer' } }],
+                tags: ['Progress'],
+                summary: 'ดูความคืบหน้ารวมของ course',
+                parameters: [
+                    { name: 'student_id', in: 'path', required: true, schema: { type: 'integer' } },
+                    { name: 'course_id', in: 'path', required: true, schema: { type: 'integer' } }
+                ],
                 responses: {
                     200: {
-                        description: 'ประวัติการทำ quiz',
+                        description: 'ความคืบหน้ารวม',
                         content: {
                             'application/json': {
                                 schema: {
-                                    type: 'array',
-                                    items: { $ref: '#/components/schemas/QuizAttemptWithDetail' }
+                                    type: 'object',
+                                    properties: {
+                                        total_lessons: { type: 'integer', example: 10 },
+                                        completed_lessons: { type: 'integer', example: 7 }
+                                    }
                                 }
                             }
                         }

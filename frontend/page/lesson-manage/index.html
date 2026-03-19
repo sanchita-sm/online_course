@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>จัดการบทเรียน - MyCourse</title>
+  <link rel="stylesheet" href="../../assets/css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="logo"><span class="logo-icon">📚</span><span class="logo-text">MyCourse</span></a>
+      <nav class="nav-links">
+        <a href="../teacher-dashboard/index.html" class="nav-item">Dashboard</a>
+        <a href="../course-manage/index.html" class="nav-item">จัดการคอร์ส</a>
+      </nav>
+      <div class="navbar-right">
+        <span class="navbar-username" id="navUsername"></span>
+        <button class="btn-auth btn-login" onclick="logout()">ออกจากระบบ</button>
+      </div>
+    </div>
+  </header>
+  <div class="breadcrumb-bar"><div class="breadcrumb-inner">
+    <a href="../teacher-dashboard/index.html" class="breadcrumb-link">Dashboard</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../course-manage/index.html" class="breadcrumb-link">จัดการคอร์ส</a>
+    <span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-current" id="breadcrumbCourse">บทเรียน</span>
+  </div></div>
+  <section class="page-header">
+    <div class="page-header-inner" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+      <div><h1 class="page-title" id="courseTitle">จัดการบทเรียน</h1></div>
+      <a href="#" class="btn-primary" style="padding:10px 22px;font-size:14px" onclick="openLessonModal()">+ เพิ่มบทเรียน</a>
+    </div>
+  </section>
+  <div class="dashboard-wrap"><div id="lessonListWrap"><div class="loading-state">กำลังโหลด...</div></div></div>
+  <div class="modal-overlay" id="lessonModal" style="display:none" onclick="closeModal(event)">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">เพิ่มบทเรียน</h3>
+        <button class="modal-close" onclick="closeLessonModal()">✕</button>
+      </div>
+      <div class="alert alert-error" id="modalError" style="display:none"></div>
+      <form id="lessonForm">
+        <div class="form-group"><label class="form-label">ชื่อบทเรียน <span class="required">*</span></label><input type="text" id="lessonTitle" class="form-input" required/></div>
+        <div class="form-group"><label class="form-label">คำอธิบาย</label><textarea id="lessonDesc" class="form-input form-textarea" rows="3"></textarea></div>
+        <div class="form-group"><label class="form-label">Video URL <span class="required">*</span></label><input type="text" id="lessonVideo" class="form-input" required/></div>
+        <div class="form-group"><label class="form-label">ลำดับที่ <span class="required">*</span></label><input type="number" id="lessonPosition" class="form-input" min="1" required/></div>
+        <input type="hidden" id="lessonEditId"/>
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" style="padding:11px 24px" onclick="closeLessonModal()">ยกเลิก</button>
+          <button type="submit" class="btn-submit" id="lessonSubmitBtn" style="width:auto;padding:11px 28px">บันทึก</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>

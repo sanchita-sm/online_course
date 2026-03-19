@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard ครู - MyCourse</title>
+  <link rel="stylesheet" href="../../assets/css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="logo"><span class="logo-icon">📚</span><span class="logo-text">MyCourse</span></a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-item nav-active">Dashboard</a>
+        <a href="../course-manage/index.html" class="nav-item">จัดการคอร์ส</a>
+      </nav>
+      <div class="navbar-right">
+        <span class="navbar-username" id="navUsername"></span>
+        <button class="btn-auth btn-login" onclick="logout()">ออกจากระบบ</button>
+      </div>
+    </div>
+  </header>
+  <section class="page-header">
+    <div class="page-header-inner">
+      <h1 class="page-title" id="welcomeText">ยินดีต้อนรับ</h1>
+      <p class="page-subtitle">ภาพรวมคอร์สที่คุณสอน</p>
+    </div>
+  </section>
+  <div class="dashboard-wrap">
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-card-icon">📘</div><div class="stat-card-info"><span class="stat-card-num" id="statCourses">—</span><span class="stat-card-label">คอร์สทั้งหมด</span></div></div>
+      <div class="stat-card"><div class="stat-card-icon">👨‍🎓</div><div class="stat-card-info"><span class="stat-card-num" id="statStudents">—</span><span class="stat-card-label">นักเรียนทั้งหมด</span></div></div>
+      <div class="stat-card"><div class="stat-card-icon">📝</div><div class="stat-card-info"><span class="stat-card-num" id="statLessons">—</span><span class="stat-card-label">บทเรียนทั้งหมด</span></div></div>
+    </div>
+    <div class="dashboard-section">
+      <div class="section-header">
+        <h2 class="section-title">คอร์สของฉัน</h2>
+        <a href="../course-manage/index.html" class="btn-primary" style="padding:9px 20px;font-size:14px;">+ สร้างคอร์สใหม่</a>
+      </div>
+      <div class="courses-grid" id="teacherCoursesGrid"><div class="loading-state">กำลังโหลด...</div></div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>

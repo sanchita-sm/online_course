@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>รายละเอียดคอร์ส - MyCourse</title>
+  <link rel="stylesheet" href="../../assets/css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="logo"><span class="logo-icon">📚</span><span class="logo-text">MyCourse</span></a>
+      <nav class="nav-links">
+        <a href="../courses/index.html" class="nav-item">คอร์สทั้งหมด</a>
+      </nav>
+      <div class="navbar-right">
+        <a href="../login/index.html" class="btn-auth btn-login">เข้าสู่ระบบ</a>
+        <a href="../register/index.html" class="btn-auth btn-register">สมัครสมาชิก</a>
+      </div>
+    </div>
+  </header>
+  <div class="breadcrumb-bar">
+    <div class="breadcrumb-inner">
+      <a href="../../index.html" class="breadcrumb-link">หน้าหลัก</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../courses/index.html" class="breadcrumb-link">คอร์สทั้งหมด</a>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current" id="breadcrumbTitle">รายละเอียดคอร์ส</span>
+    </div>
+  </div>
+  <div class="detail-layout">
+    <main class="detail-main">
+      <div class="detail-hero" id="detailHero"><div class="loading-state">กำลังโหลด...</div></div>
+      <div class="detail-lessons" id="detailLessons" style="display:none">
+        <h2 class="section-title">บทเรียนในคอร์สนี้</h2>
+        <div class="lesson-list" id="lessonList"></div>
+      </div>
+    </main>
+    <aside class="enroll-card" id="enrollCard" style="display:none">
+      <div class="enroll-icon">📖</div>
+      <div class="enroll-info">
+        <div class="enroll-label">คอร์สนี้ฟรี</div>
+        <div class="enroll-lessons" id="enrollLessonCount">— บทเรียน</div>
+      </div>
+      <button class="btn-enroll" onclick="handleEnroll()">ลงทะเบียนเรียน</button>
+      <p class="enroll-note">ต้องเข้าสู่ระบบก่อนลงทะเบียน</p>
+    </aside>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>

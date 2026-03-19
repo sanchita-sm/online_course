@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>เรียน - MyCourse</title>
+  <link rel="stylesheet" href="../../assets/css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body class="lesson-view-page">
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="logo"><span class="logo-icon">📚</span><span class="logo-text">MyCourse</span></a>
+      <nav class="nav-links">
+        <a href="../student-dashboard/index.html" class="nav-item">Dashboard</a>
+        <a href="../my-courses/index.html" class="nav-item">คอร์สของฉัน</a>
+      </nav>
+      <div class="navbar-right">
+        <span class="navbar-username" id="navUsername"></span>
+        <button class="btn-auth btn-login" onclick="logout()">ออกจากระบบ</button>
+      </div>
+    </div>
+  </header>
+  <div class="lesson-layout">
+    <aside class="lesson-sidebar">
+      <div class="lesson-sidebar-header"><h3 class="lesson-sidebar-title" id="sidebarCourseTitle">บทเรียน</h3></div>
+      <div class="lesson-sidebar-list" id="lessonSidebarList"><div class="loading-state" style="padding:20px">กำลังโหลด...</div></div>
+    </aside>
+    <main class="lesson-main" id="lessonMain"><div class="loading-state" style="padding:80px">กรุณาเลือกบทเรียน</div></main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>

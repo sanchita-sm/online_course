@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>จัดการคอร์ส - MyCourse</title>
+  <link rel="stylesheet" href="../../assets/css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="logo"><span class="logo-icon">📚</span><span class="logo-text">MyCourse</span></a>
+      <nav class="nav-links">
+        <a href="../teacher-dashboard/index.html" class="nav-item">Dashboard</a>
+        <a href="index.html" class="nav-item nav-active">จัดการคอร์ส</a>
+      </nav>
+      <div class="navbar-right">
+        <span class="navbar-username" id="navUsername"></span>
+        <button class="btn-auth btn-login" onclick="logout()">ออกจากระบบ</button>
+      </div>
+    </div>
+  </header>
+  <section class="page-header">
+    <div class="page-header-inner">
+      <h1 class="page-title" id="pageTitle">สร้างคอร์สใหม่</h1>
+    </div>
+  </section>
+  <div class="manage-layout">
+    <div class="manage-form-wrap">
+      <div class="alert alert-error" id="alertError" style="display:none"></div>
+      <div class="alert alert-success" id="alertSuccess" style="display:none"></div>
+      <form id="courseForm">
+        <div class="form-group">
+          <label class="form-label">ชื่อคอร์ส <span class="required">*</span></label>
+          <input type="text" id="title" class="form-input" placeholder="เช่น แคลคูลัสเบื้องต้น" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">คำอธิบาย</label>
+          <textarea id="description" class="form-input form-textarea" rows="4" placeholder="อธิบายเนื้อหา..."></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">หมวดหมู่ <span class="required">*</span></label>
+            <select id="category_id" class="form-input form-select" required><option value="">-- เลือกหมวดหมู่ --</option></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">ระดับ <span class="required">*</span></label>
+            <select id="level_id" class="form-input form-select" required><option value="">-- เลือกระดับ --</option></select>
+          </div>
+        </div>
+        <div class="form-actions">
+          <a href="../teacher-dashboard/index.html" class="btn-secondary" style="padding:12px 28px;">ยกเลิก</a>
+          <button type="submit" class="btn-submit" id="submitBtn" style="width:auto;padding:12px 36px;">บันทึกคอร์ส</button>
+        </div>
+      </form>
+    </div>
+    <div class="manage-list">
+      <div class="section-header"><h2 class="section-title" style="font-size:16px;">คอร์สของฉัน</h2></div>
+      <div id="myCourseList"><div class="loading-state">กำลังโหลด...</div></div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>

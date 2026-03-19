@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>เข้าสู่ระบบ - MyCourse</title>
+  <link rel="stylesheet" href="../../assets/css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body class="auth-page">
+  <div class="auth-container">
+    <div class="auth-left">
+      <a href="../../index.html" class="logo">
+        <span class="logo-icon">📚</span>
+        <span class="logo-text">MyCourse</span>
+      </a>
+      <h2 class="auth-tagline">ยินดีต้อนรับ<br/>กลับมา</h2>
+      <p class="auth-tagline-sub">เข้าสู่ระบบเพื่อเรียนต่อจากที่<br/>คุณค้างไว้</p>
+      <div class="auth-stats">
+        <div class="auth-stat"><span class="auth-stat-num">500+</span><span class="auth-stat-label">คอร์ส</span></div>
+        <div class="auth-stat"><span class="auth-stat-num">200+</span><span class="auth-stat-label">อาจารย์</span></div>
+      </div>
+    </div>
+    <div class="auth-right">
+      <div class="auth-form-wrap">
+        <h1 class="auth-title">เข้าสู่ระบบ</h1>
+        <p class="auth-switch">ยังไม่มีบัญชี? <a href="../register/index.html" class="auth-link">สมัครสมาชิก</a></p>
+        <div class="alert alert-error" id="alertError" style="display:none"></div>
+        <form id="loginForm">
+          <div class="form-group">
+            <label class="form-label">อีเมล</label>
+            <input type="email" id="email" class="form-input" placeholder="example@email.com" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">รหัสผ่าน</label>
+            <input type="password" id="password" class="form-input" placeholder="รหัสผ่าน" required/>
+          </div>
+          <button type="submit" class="btn-submit" id="submitBtn">เข้าสู่ระบบ</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ความคืบหน้า - MyCourse</title>
+  <link rel="stylesheet" href="../../assets/css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="logo"><span class="logo-icon">📚</span><span class="logo-text">MyCourse</span></a>
+      <nav class="nav-links">
+        <a href="../student-dashboard/index.html" class="nav-item">Dashboard</a>
+        <a href="../my-courses/index.html" class="nav-item">คอร์สของฉัน</a>
+        <a href="../courses/index.html" class="nav-item">ค้นหาคอร์ส</a>
+      </nav>
+      <div class="navbar-right">
+        <span class="navbar-username" id="navUsername"></span>
+        <button class="btn-auth btn-login" onclick="logout()">ออกจากระบบ</button>
+      </div>
+    </div>
+  </header>
+  <section class="page-header">
+    <div class="page-header-inner">
+      <h1 class="page-title">ความคืบหน้าการเรียน</h1>
+      <p class="page-subtitle">ติดตามสถิติและความก้าวหน้าของคุณ</p>
+    </div>
+  </section>
+  <div class="dashboard-wrap">
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-card-icon">📘</div><div class="stat-card-info"><span class="stat-card-num" id="statCourses">—</span><span class="stat-card-label">คอร์สทั้งหมด</span></div></div>
+      <div class="stat-card"><div class="stat-card-icon">✅</div><div class="stat-card-info"><span class="stat-card-num" id="statDone">—</span><span class="stat-card-label">บทเรียนที่เรียนแล้ว</span></div></div>
+      <div class="stat-card"><div class="stat-card-icon">📊</div><div class="stat-card-info"><span class="stat-card-num" id="statAvg">—%</span><span class="stat-card-label">ความคืบหน้าเฉลี่ย</span></div></div>
+    </div>
+    <div class="dashboard-section">
+      <h2 class="section-title">ความคืบหน้าแต่ละคอร์ส</h2>
+      <div id="progressList"><div class="loading-state">กำลังโหลด...</div></div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>

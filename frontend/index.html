@@ -1,73 +1,87 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyCourse</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MyCourse - เรียนออนไลน์</title>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@400;600;700;800&display=swap" rel="stylesheet"/>
 </head>
 <body>
 
-<!-- Header -->
-<header class="site-header">
-    <div class="container-header">
-        <!-- โลโก้ / ชื่อเว็บ -->
-        <div class="logo">
-            <a href="index.html">MyCourse</a>
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">📚</span>
+        <span class="logo-text">MyCourse</span>
+      </a>
+      <nav class="nav-links">
+        <a href="page/courses/index.html" class="nav-item">คอร์สทั้งหมด</a>
+        <div class="nav-dropdown">
+          <a href="#" class="nav-item dropdown-trigger">หมวดหมู่ <span class="chevron">▾</span></a>
+          <div class="dropdown-menu">
+            <a href="page/courses/index.html?category=คณิตศาสตร์" class="dropdown-item">คณิตศาสตร์</a>
+            <a href="page/courses/index.html?category=วิทยาศาสตร์" class="dropdown-item">วิทยาศาสตร์</a>
+            <a href="page/courses/index.html?category=ชีววิทยา" class="dropdown-item">ชีววิทยา</a>
+            <a href="page/courses/index.html?category=เคมี" class="dropdown-item">เคมี</a>
+            <a href="page/courses/index.html?category=ฟิสิกส์" class="dropdown-item">ฟิสิกส์</a>
+            <a href="page/courses/index.html?category=สังคมศึกษา" class="dropdown-item">สังคมศึกษา</a>
+            <a href="page/courses/index.html?category=ภาษาอังกฤษ" class="dropdown-item">ภาษาอังกฤษ</a>
+            <a href="page/courses/index.html?category=โปรแกรมมิ่ง" class="dropdown-item">โปรแกรมมิ่ง</a>
+          </div>
         </div>
-
-        <!-- Navigation + Search -->
-        <nav class="navbar">
-            <ul class="nav-links">
-    <li><a href="#">คอร์สทั้งหมด</a></li>
-
-    <!-- Dropdown หมวดหมู่ -->
-    <li class="dropdown">
-        <a href="#">ดูหมวดหมู่ ▾</a>
-        <ul class="dropdown-menu">
-            <li><a href="#">คณิตศาสตร์</a></li>
-            <li><a href="#">วิทยาศาสตร์</a></li>
-            <li><a href="#">ชีววิทยา</a></li>
-            <li><a href="#">เคมี</a></li>
-            <li><a href="#">ฟิสิกส์</a></li>
-            <li><a href="#">สังคมศึกษา</a></li>
-            <li><a href="#">ภาษาอังกฤษ</a></li>
-            <li><a href="#">โปรแกรมมิ่ง</a></li>
-        </ul>
-    </li>
-    <!-- Dropdown ระดับคอร์ส -->
-     <li class="dropdown">
-        <a href="#">ระดับของคอร์ส ▾</a>
-        <ul class="dropdown-menu">
-            <li><a href="#">ม.ต้น</a></li>
-            <li><a href="#">ม.ปลาย</a></li>
-            <li><a href="#">มหาวิทยาลัย</a></li>
-        </ul>
-    </li>
-</ul>
-            <!-- Search bar -->
-            <div class="search-bar">
-                <input type="text" placeholder="ค้นหาคอร์ส...">
-                <button>🔍</button>
-            </div>
-        </nav>
-
-        <!-- Login / Register -->
-        <div class="auth-buttons">
-            <a href="page/login/index.html" class="button secondary">Login</a>
-            <a href="page/register/index.html" class="button">Register</a>
+        <div class="nav-dropdown">
+          <a href="#" class="nav-item dropdown-trigger">ระดับการศึกษา <span class="chevron">▾</span></a>
+          <div class="dropdown-menu">
+            <a href="page/courses/index.html?level=มัธยมศึกษาตอนต้น" class="dropdown-item">มัธยมศึกษาตอนต้น</a>
+            <a href="page/courses/index.html?level=มัธยมศึกษาตอนปลาย" class="dropdown-item">มัธยมศึกษาตอนปลาย</a>
+            <a href="page/courses/index.html?level=มหาวิทยาลัย" class="dropdown-item">มหาวิทยาลัย</a>
+          </div>
         </div>
+      </nav>
+      <div class="navbar-right">
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="ค้นหาคอร์ส..." class="search-input"/>
+          <button class="search-btn" onclick="doSearch()">🔍</button>
+        </div>
+        <a href="page/login/index.html" class="btn-auth btn-login">เข้าสู่ระบบ</a>
+        <a href="page/register/index.html" class="btn-auth btn-register">สมัครสมาชิก</a>
+      </div>
     </div>
-</header>
+  </header>
 
-<!-- Main Content -->
-<main class="main-content">
-    <section class="hero">
-        <h1>ยินดีต้อนรับสู่ MyCourse</h1>
-        <p>เรียนออนไลน์ได้ทุกที่ ทุกเวลา เลือกคอร์สที่เหมาะกับคุณ</p>
-        <a href="#" class="button">เริ่มเรียนเลย</a>
-    </section>
-</main>
+  <section class="hero">
+    <div class="hero-bg-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">🎓 แพลตฟอร์มเรียนออนไลน์</div>
+      <h1 class="hero-title">ยินดีต้อนรับสู่ MyCourse</h1>
+      <p class="hero-subtitle">เรียนออนไลน์ได้ทุกที่ ทุกเวลา เลือกคอร์สที่เหมาะกับคุณ</p>
+      <div class="hero-actions">
+        <a href="page/courses/index.html" class="btn-primary">เริ่มเรียนเลย</a>
+        <a href="page/courses/index.html" class="btn-secondary">ดูคอร์สทั้งหมด</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num">500+</span><span class="stat-label">คอร์ส</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">10,000+</span><span class="stat-label">ผู้เรียน</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">200+</span><span class="stat-label">อาจารย์</span></div>
+      </div>
+    </div>
+  </section>
 
+  <script>
+    function doSearch() {
+      const q = document.getElementById('searchInput').value.trim()
+      if (q) location.href = `page/search/index.html?q=${encodeURIComponent(q)}`
+    }
+    document.getElementById('searchInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') doSearch()
+    })
+  </script>
 </body>
 </html>

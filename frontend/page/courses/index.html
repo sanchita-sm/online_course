@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>คอร์สทั้งหมด - MyCourse</title>
+  <link rel="stylesheet" href="../../assets/css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="logo"><span class="logo-icon">📚</span><span class="logo-text">MyCourse</span></a>
+      <nav class="nav-links">
+        <a href="../courses/index.html" class="nav-item nav-active">คอร์สทั้งหมด</a>
+        <div class="nav-dropdown">
+          <a href="#" class="nav-item dropdown-trigger">หมวดหมู่ <span class="chevron">▾</span></a>
+          <div class="dropdown-menu">
+            <a href="index.html?category=คณิตศาสตร์" class="dropdown-item">คณิตศาสตร์</a>
+            <a href="index.html?category=วิทยาศาสตร์" class="dropdown-item">วิทยาศาสตร์</a>
+            <a href="index.html?category=ชีววิทยา" class="dropdown-item">ชีววิทยา</a>
+            <a href="index.html?category=เคมี" class="dropdown-item">เคมี</a>
+            <a href="index.html?category=ฟิสิกส์" class="dropdown-item">ฟิสิกส์</a>
+            <a href="index.html?category=สังคมศึกษา" class="dropdown-item">สังคมศึกษา</a>
+            <a href="index.html?category=ภาษาอังกฤษ" class="dropdown-item">ภาษาอังกฤษ</a>
+            <a href="index.html?category=โปรแกรมมิ่ง" class="dropdown-item">โปรแกรมมิ่ง</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <a href="#" class="nav-item dropdown-trigger">ระดับการศึกษา <span class="chevron">▾</span></a>
+          <div class="dropdown-menu">
+            <a href="index.html?level=มัธยมศึกษาตอนต้น" class="dropdown-item">มัธยมศึกษาตอนต้น</a>
+            <a href="index.html?level=มัธยมศึกษาตอนปลาย" class="dropdown-item">มัธยมศึกษาตอนปลาย</a>
+            <a href="index.html?level=มหาวิทยาลัย" class="dropdown-item">มหาวิทยาลัย</a>
+          </div>
+        </div>
+      </nav>
+      <div class="navbar-right">
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="ค้นหาคอร์ส..." class="search-input"/>
+          <button class="search-btn" onclick="doSearch()">🔍</button>
+        </div>
+        <a href="../login/index.html" class="btn-auth btn-login">เข้าสู่ระบบ</a>
+        <a href="../register/index.html" class="btn-auth btn-register">สมัครสมาชิก</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="page-header">
+    <div class="page-header-inner">
+      <h1 class="page-title">คอร์สทั้งหมด</h1>
+      <p class="page-subtitle">เลือกเรียนจากคอร์สคุณภาพกว่า 500 คอร์ส</p>
+    </div>
+  </section>
+
+  <div class="courses-layout">
+    <aside class="filter-sidebar">
+      <div class="filter-section">
+        <h3 class="filter-title">หมวดหมู่</h3>
+        <div class="filter-list">
+          <label class="filter-item"><input type="radio" name="category" value=""/> ทั้งหมด</label>
+          <label class="filter-item"><input type="radio" name="category" value="คณิตศาสตร์"/> คณิตศาสตร์</label>
+          <label class="filter-item"><input type="radio" name="category" value="วิทยาศาสตร์"/> วิทยาศาสตร์</label>
+          <label class="filter-item"><input type="radio" name="category" value="ชีววิทยา"/> ชีววิทยา</label>
+          <label class="filter-item"><input type="radio" name="category" value="เคมี"/> เคมี</label>
+          <label class="filter-item"><input type="radio" name="category" value="ฟิสิกส์"/> ฟิสิกส์</label>
+          <label class="filter-item"><input type="radio" name="category" value="สังคมศึกษา"/> สังคมศึกษา</label>
+          <label class="filter-item"><input type="radio" name="category" value="ภาษาอังกฤษ"/> ภาษาอังกฤษ</label>
+          <label class="filter-item"><input type="radio" name="category" value="โปรแกรมมิ่ง"/> โปรแกรมมิ่ง</label>
+        </div>
+      </div>
+      <div class="filter-section">
+        <h3 class="filter-title">ระดับการศึกษา</h3>
+        <div class="filter-list">
+          <label class="filter-item"><input type="radio" name="level" value=""/> ทั้งหมด</label>
+          <label class="filter-item"><input type="radio" name="level" value="มัธยมศึกษาตอนต้น"/> ม.ต้น</label>
+          <label class="filter-item"><input type="radio" name="level" value="มัธยมศึกษาตอนปลาย"/> ม.ปลาย</label>
+          <label class="filter-item"><input type="radio" name="level" value="มหาวิทยาลัย"/> มหาวิทยาลัย</label>
+        </div>
+      </div>
+    </aside>
+    <main class="courses-main">
+      <div class="courses-toolbar">
+        <span class="courses-count" id="coursesCount">กำลังโหลด...</span>
+        <select class="sort-select" id="sortSelect">
+          <option value="newest">ใหม่ล่าสุด</option>
+          <option value="name">ชื่อ A-Z</option>
+        </select>
+      </div>
+      <div class="courses-grid" id="coursesGrid">
+        <div class="loading-state">กำลังโหลดคอร์ส...</div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>

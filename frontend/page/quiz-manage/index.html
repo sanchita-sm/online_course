@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>จัดการ Quiz - MyCourse</title>
+  <link rel="stylesheet" href="../../assets/css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="logo"><span class="logo-icon">📚</span><span class="logo-text">MyCourse</span></a>
+      <nav class="nav-links">
+        <a href="../teacher-dashboard/index.html" class="nav-item">Dashboard</a>
+        <a href="../course-manage/index.html" class="nav-item">จัดการคอร์ส</a>
+      </nav>
+      <div class="navbar-right">
+        <span class="navbar-username" id="navUsername"></span>
+        <button class="btn-auth btn-login" onclick="logout()">ออกจากระบบ</button>
+      </div>
+    </div>
+  </header>
+  <div class="breadcrumb-bar"><div class="breadcrumb-inner">
+    <a href="../teacher-dashboard/index.html" class="breadcrumb-link">Dashboard</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="#" class="breadcrumb-link" id="breadcrumbLesson">บทเรียน</a>
+    <span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-current">จัดการ Quiz</span>
+  </div></div>
+  <section class="page-header">
+    <div class="page-header-inner" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+      <div><h1 class="page-title" id="lessonTitle">จัดการ Quiz</h1></div>
+      <button class="btn-primary" style="padding:10px 22px;font-size:14px" onclick="openQuizModal()">+ เพิ่มคำถาม</button>
+    </div>
+  </section>
+  <div class="dashboard-wrap"><div id="quizListWrap"><div class="loading-state">กำลังโหลด...</div></div></div>
+  <div class="modal-overlay" id="quizModal" style="display:none" onclick="closeModal(event)">
+    <div class="modal-box modal-box-lg">
+      <div class="modal-header">
+        <h3 class="modal-title" id="quizModalTitle">เพิ่มคำถาม</h3>
+        <button class="modal-close" onclick="closeQuizModal()">✕</button>
+      </div>
+      <div class="alert alert-error" id="quizModalError" style="display:none"></div>
+      <form id="quizForm">
+        <div class="form-group"><label class="form-label">คำถาม <span class="required">*</span></label><textarea id="quizQuestion" class="form-input form-textarea" rows="3" required></textarea></div>
+        <div class="form-group">
+          <label class="form-label">ตัวเลือก <span class="required">*</span></label>
+          <div id="choicesWrap"></div>
+          <button type="button" class="btn-add-choice" onclick="addChoice()">+ เพิ่มตัวเลือก</button>
+        </div>
+        <input type="hidden" id="quizEditId"/>
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" style="padding:11px 24px" onclick="closeQuizModal()">ยกเลิก</button>
+          <button type="submit" class="btn-submit" id="quizSubmitBtn" style="width:auto;padding:11px 28px">บันทึก</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>

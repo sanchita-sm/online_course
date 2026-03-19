@@ -10,7 +10,7 @@ const app = express()
 
 app.use(bodyparser.json())
 app.use(cors({
-  origin: true,
+  origin: 'http://localhost:5500',
   credentials: true  // จำเป็นเพื่อให้ session cookie ส่งข้ามได้
 }))
 
@@ -21,7 +21,8 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    maxAge: 7 * 24 * 60 * 60 * 1000  // มีอายุ 7 วัน
+    maxAge: 7 * 24 * 60 * 60 * 1000,  // มีอายุ 7 วัน
+    sameSite: 'lax'
   }
 }))
 

@@ -55,4 +55,17 @@ const getStudentScore = async (student_id, lesson_id) => {
   return rows[0]
 }
 
-module.exports = { submitAnswer, getQuizAttempts, getStudentScore }
+const getMyAttemptsByLesson = async (student_id, lesson_id) => {
+  const conn = await getConnection()
+  const [rows] = await conn.query(
+    `SELECT qa.quiz_id, qa.selected_choice_id, qc.is_correct
+     FROM quiz_attempts qa
+     JOIN quiz_choices qc ON qa.selected_choice_id = qc.id
+     JOIN quizzes q ON qa.quiz_id = q.id
+     WHERE qa.student_id = ? AND q.lesson_id = ?`,
+    [student_id, lesson_id]
+  )
+  return rows
+}
+
+module.exports = { submitAnswer, getQuizAttempts, getStudentScore, getMyAttemptsByLesson }

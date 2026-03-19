@@ -70,6 +70,17 @@ const getQuizAttempts = async (req, res, next) => {
   }
 }
 
+const getMyAttempts = async (req, res, next) => {
+  try {
+    const { lesson_id } = req.params
+    const { student_id } = req.query
+    const attempts = await QuizattemptsModel.getMyAttemptsByLesson(student_id, lesson_id)
+    res.json(attempts)
+  } catch (error) {
+    next(error)
+  }
+}
+
 const update = async (req, res, next) => {
   try {
     const quiz_id = req.params.id
@@ -106,4 +117,4 @@ const remove = async (req, res, next) => {
   }
 }
 
-module.exports = { create, getQuizByLesson, submit, getQuizAttempts, update, remove }
+module.exports = { create, getQuizByLesson, submit, getQuizAttempts, getMyAttempts, update, remove }

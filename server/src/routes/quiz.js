@@ -6,6 +6,7 @@ router.post('/', controller.create)
 router.get('/lesson/:lesson_id', controller.getQuizByLesson)
 router.post('/submit', controller.submit)
 router.get('/attempts/:quiz_id', controller.getQuizAttempts)
+router.get('/my-attempts/:lesson_id', controller.getMyAttempts)
 router.put('/:id', controller.update)
 router.delete('/:id', controller.remove)
 

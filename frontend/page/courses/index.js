@@ -1,9 +1,33 @@
-let allCourses = []
+let allCourses  = []
+let categoryMap = {}
+let levelMap    = {}
+
+// อ่าน ?category= หรือ ?level= จาก URL แล้วเลือก radio ให้อัตโนมัติ
+function applyUrlParams() {
+  const p = new URLSearchParams(location.search)
+  const cat = p.get('category')
+  const lev = p.get('level')
+  if (cat) {
+    const radio = document.querySelector(`input[name="category"][value="${cat}"]`)
+    if (radio) radio.checked = true
+  }
+  if (lev) {
+    const radio = document.querySelector(`input[name="level"][value="${lev}"]`)
+    if (radio) radio.checked = true
+  }
+}
 
 async function loadCourses() {
   try {
-    const res = await api.courses.getAll()
-    allCourses = res.data
+    const [courseRes, catRes, levRes] = await Promise.all([
+      api.courses.getAll(),
+      api.categories.getAll(),
+      api.levels.getAll()
+    ])
+    allCourses = courseRes.data
+    catRes.data.forEach(c => categoryMap[c.id] = c.category)
+    levRes.data.forEach(l => levelMap[l.id]    = l.level)
+    applyUrlParams()
     filterCourses()
   } catch (e) {
     document.getElementById('coursesGrid').innerHTML = '<div class="empty-state">ไม่สามารถโหลดคอร์สได้</div>'
@@ -22,8 +46,8 @@ function renderCourses(courses) {
       <div class="course-card-img">📖</div>
       <div class="course-card-body">
         <div class="course-card-tags">
-          <span class="tag tag-category">${c.category_id}</span>
-          <span class="tag tag-level">${c.level_id}</span>
+          <span class="tag tag-category">${categoryMap[c.category_id] || c.category_id}</span>
+          <span class="tag tag-level">${levelMap[c.level_id] || c.level_id}</span>
         </div>
         <h3 class="course-card-title">${c.title}</h3>
         <p class="course-card-desc">${c.description || 'ไม่มีคำอธิบาย'}</p>
@@ -39,9 +63,9 @@ function filterCourses() {
   const sort     = document.getElementById('sortSelect').value
 
   let filtered = allCourses.filter(c => {
-    const matchCat  = !category || String(c.category_id) === category
-    const matchLvl  = !level    || String(c.level_id)    === level
-    const matchKey  = !keyword  || c.title.toLowerCase().includes(keyword)
+    const matchCat = !category || String(c.category_id) === category
+    const matchLvl = !level    || String(c.level_id)    === level
+    const matchKey = !keyword  || c.title.toLowerCase().includes(keyword)
     return matchCat && matchLvl && matchKey
   })
 

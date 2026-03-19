@@ -1,6 +1,9 @@
 const params  = new URLSearchParams(location.search)
 const keyword = params.get('q') || ''
 
+let categoryMap = {}
+let levelMap    = {}
+
 if (keyword) {
   document.getElementById('searchBig').value = keyword
   document.getElementById('searchHeading').textContent = `ผลการค้นหา "${keyword}"`
@@ -12,9 +15,16 @@ async function loadSearch() {
     return
   }
   try {
-    const res = await api.courses.search(keyword)
+    const [res, catRes, levRes] = await Promise.all([
+      api.courses.search(keyword),
+      api.categories.getAll(),
+      api.levels.getAll()
+    ])
+    catRes.data.forEach(c => categoryMap[c.id] = c.category)
+    levRes.data.forEach(l => levelMap[l.id]    = l.level)
+
     const courses = res.data
-    const grid = document.getElementById('resultsGrid')
+    const grid    = document.getElementById('resultsGrid')
     if (!courses.length) {
       grid.innerHTML = `<div class="empty-state">ไม่พบคอร์สที่ตรงกับ "${keyword}"</div>`
       return
@@ -25,8 +35,8 @@ async function loadSearch() {
         <div class="course-card-img">📖</div>
         <div class="course-card-body">
           <div class="course-card-tags">
-            <span class="tag tag-category">${c.category_id}</span>
-            <span class="tag tag-level">${c.level_id}</span>
+            <span class="tag tag-category">${categoryMap[c.category_id] || c.category_id}</span>
+            <span class="tag tag-level">${levelMap[c.level_id] || c.level_id}</span>
           </div>
           <h3 class="course-card-title">${c.title}</h3>
           <p class="course-card-desc">${c.description || 'ไม่มีคำอธิบาย'}</p>

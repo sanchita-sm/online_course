@@ -4,10 +4,20 @@ if (!user.id || user.role !== 'teacher') location.href = '../login/index.html'
 document.getElementById('navUsername').textContent = `${user.firstname || ''} ${user.lastname || ''}`
 document.getElementById('welcomeText').textContent = `ยินดีต้อนรับ, ${user.firstname || 'ครู'} 👋`
 
+let categoryMap = {}
+let levelMap    = {}
+
 async function loadDashboard() {
   try {
-    const res = await api.courses.getAll()
-    const myCourses = res.data.filter(c => c.teacher_id == user.id)
+    const [courseRes, catRes, levRes] = await Promise.all([
+      api.courses.getAll(),
+      api.categories.getAll(),
+      api.levels.getAll()
+    ])
+    catRes.data.forEach(c => categoryMap[c.id] = c.category)
+    levRes.data.forEach(l => levelMap[l.id]    = l.level)
+
+    const myCourses = courseRes.data.filter(c => c.teacher_id == user.id)
     document.getElementById('statCourses').textContent = myCourses.length
 
     let totalLessons = 0, totalStudents = 0
@@ -21,6 +31,7 @@ async function loadDashboard() {
     }))
     document.getElementById('statLessons').textContent  = totalLessons
     document.getElementById('statStudents').textContent = totalStudents
+
     renderCourses(myCourses)
   } catch (e) {
     document.getElementById('teacherCoursesGrid').innerHTML = '<div class="empty-state">ไม่สามารถโหลดข้อมูลได้</div>'
@@ -38,8 +49,8 @@ function renderCourses(courses) {
       <div class="course-card-img">📖</div>
       <div class="course-card-body">
         <div class="course-card-tags">
-          <span class="tag tag-category">${c.category_id}</span>
-          <span class="tag tag-level">${c.level_id}</span>
+          <span class="tag tag-category">${categoryMap[c.category_id] || c.category_id}</span>
+          <span class="tag tag-level">${levelMap[c.level_id] || c.level_id}</span>
         </div>
         <h3 class="course-card-title">${c.title}</h3>
         <p class="course-card-desc">${c.description || 'ไม่มีคำอธิบาย'}</p>

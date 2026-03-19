@@ -34,6 +34,7 @@ const api = {
   },
 
   quiz: {
+    getMyAttempts: (lessonId, studentId) => axios.get(`${BASE_URL}/quiz/my-attempts/${lessonId}?student_id=${studentId}`, axiosConfig),
     getByLesson: (lessonId) => axios.get(`${BASE_URL}/quiz/lesson/${lessonId}`, axiosConfig),
     create:      (data)     => axios.post(`${BASE_URL}/quiz`, data, axiosConfig),
     update:      (id, data) => axios.put(`${BASE_URL}/quiz/${id}`, data, axiosConfig),

@@ -1,15 +1,22 @@
-const params = new URLSearchParams(location.search)
+const params   = new URLSearchParams(location.search)
 const courseId = params.get('id')
+
+let categoryMap = {}
+let levelMap    = {}
 
 async function loadDetail() {
   if (!courseId) { location.href = '../courses/index.html'; return }
   try {
-    const [courseRes, lessonRes] = await Promise.all([
+    const [courseRes, lessonRes, catRes, levRes] = await Promise.all([
       api.courses.getById(courseId),
-      api.lessons.getByCourse(courseId)
+      api.lessons.getByCourse(courseId),
+      api.categories.getAll(),
+      api.levels.getAll()
     ])
     const course  = courseRes.data
     const lessons = lessonRes.data
+    catRes.data.forEach(c => categoryMap[c.id] = c.category)
+    levRes.data.forEach(l => levelMap[l.id]    = l.level)
     renderDetail(course, lessons)
   } catch (e) {
     document.getElementById('detailHero').innerHTML = '<div class="empty-state">ไม่สามารถโหลดข้อมูลได้</div>'
@@ -21,8 +28,8 @@ function renderDetail(course, lessons) {
   document.getElementById('breadcrumbTitle').textContent = course.title
   document.getElementById('detailHero').innerHTML = `
     <div class="detail-tags">
-      <span class="tag tag-category">${course.category_id}</span>
-      <span class="tag tag-level">${course.level_id}</span>
+      <span class="tag tag-category">${categoryMap[course.category_id] || course.category_id}</span>
+      <span class="tag tag-level">${levelMap[course.level_id] || course.level_id}</span>
     </div>
     <h1 class="detail-title">${course.title}</h1>
     <p class="detail-desc">${course.description || 'ไม่มีคำอธิบาย'}</p>
@@ -48,10 +55,39 @@ function renderDetail(course, lessons) {
   document.getElementById('enrollCard').style.display = 'flex'
 }
 
-function handleEnroll() {
+function showToast(message, isError = false) {
+  const toast = document.getElementById('toast')
+  toast.textContent = message
+  toast.style.background = isError ? '#991b1b' : '#166534'
+  toast.style.opacity = '1'
+  toast.style.transform = 'translateX(-50%) translateY(0)'
+  setTimeout(() => {
+    toast.style.opacity = '0'
+    toast.style.transform = 'translateX(-50%) translateY(20px)'
+  }, 2500)
+}
+
+async function handleEnroll() {
   const user = JSON.parse(localStorage.getItem('user') || '{}')
   if (!user.id) { location.href = '../login/index.html'; return }
-  location.href = `../lesson-view/index.html?course_id=${courseId}`
+
+  try {
+    await api.enrollments.enroll({
+      student_id: user.id,
+      course_id:  parseInt(courseId)
+    })
+    showToast('✅ ลงทะเบียนสำเร็จ!')
+    setTimeout(() => {
+      location.href = `../lesson-view/index.html?course_id=${courseId}`
+    }, 1500)
+  } catch (err) {
+    const msg = err.response?.data?.message || 'เกิดข้อผิดพลาด'
+    if (msg === 'Student already enrolled') {
+      location.href = `../lesson-view/index.html?course_id=${courseId}`
+    } else {
+      showToast(msg, true)
+    }
+  }
 }
 
 loadDetail()

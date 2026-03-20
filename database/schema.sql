@@ -1,5 +1,5 @@
 -- ===================================================
--- online_course - Online Course System Schema (Fixed)
+-- online_course - Online Course System Schema
 -- ===================================================
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -45,7 +45,6 @@ CREATE TABLE `levels` (
 -- ===================================================
 -- ตาราง courses
 -- ความสัมพันธ์: users (1) ── (many) courses
--- แก้ไข: เพิ่ม updated_at
 -- ===================================================
 CREATE TABLE `courses` (
     `id`            INT             NOT NULL AUTO_INCREMENT,
@@ -152,8 +151,6 @@ CREATE TABLE `progress` (
 -- ตาราง quiz_attempts
 -- ความสัมพันธ์: quizzes (1) ── (many) quiz_attempts
 --             users(student) (1) ── (many) quiz_attempts
--- แก้ไข: ตัด score ออก (คำนวณได้จาก is_correct)
---        เพิ่ม UNIQUE (quiz_id, student_id) ป้องกัน submit ซ้ำ
 -- ===================================================
 CREATE TABLE `quiz_attempts` (
   `id`                  INT         NOT NULL AUTO_INCREMENT,
@@ -170,9 +167,6 @@ CREATE TABLE `quiz_attempts` (
   CONSTRAINT `fk_attempt_selected_choice` FOREIGN KEY (`selected_choice_id`) REFERENCES `quiz_choices`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ===================================================
--- Seed data
--- ===================================================
 INSERT INTO `categories` (`category`) VALUES
   ('คณิตศาสตร์'),
   ('วิทยาศาสตร์'),

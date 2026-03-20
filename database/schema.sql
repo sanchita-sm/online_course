@@ -9,7 +9,6 @@ SET NAMES utf8mb4;
 
 -- ===================================================
 -- ตาราง users
--- แก้ไข: role เปลี่ยนจากภาษาไทยเป็น 'teacher' / 'student'
 -- ===================================================
 CREATE TABLE IF NOT EXISTS `users` (
     `id`            INT             NOT NULL AUTO_INCREMENT,
